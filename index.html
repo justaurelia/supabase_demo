@@ -2,17 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>LiveLiveLove – Sign up</title>
+    <title>Supabase Auth – Custom Email Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       :root {
-        --bg: #f5f3f0;
-        --card-bg: #ffffff;
-        --accent: #d08c7f;
-        --accent-soft: #f3dfd9;
-        --text-main: #222222;
-        --text-muted: #757575;
-        --border: #e4ddd7;
+        --bg: #020817;
+        --bg-soft: #020817;
+        --card-bg: #020617;
+        --accent: #3ecf8e;
+        --accent-soft: rgba(62, 207, 142, 0.12);
+        --text-main: #e5e7eb;
+        --text-muted: #9ca3af;
+        --border: #111827;
       }
 
       * {
@@ -24,54 +25,87 @@
         padding: 0;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
           sans-serif;
-        background: radial-gradient(circle at top, #f7ece6 0, var(--bg) 55%);
+        background: radial-gradient(circle at top, #0b1220 0, var(--bg-soft) 55%);
         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
+        color: var(--text-main);
       }
 
       .wrapper {
         padding: 24px;
         width: 100%;
-        max-width: 480px;
+        max-width: 520px;
       }
 
       .card {
         background: var(--card-bg);
         border-radius: 20px;
-        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
-        padding: 28px 24px 24px;
-        border: 1px solid rgba(0, 0, 0, 0.03);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
+        padding: 26px 24px 22px;
+        border: 1px solid var(--border);
+        position: relative;
+        overflow: hidden;
       }
 
-      .logo-circle {
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        background: var(--accent-soft);
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: -60px;
+        background: radial-gradient(
+          circle at top right,
+          rgba(62, 207, 142, 0.12),
+          transparent 55%
+        );
+        opacity: 0.9;
+        pointer-events: none;
+      }
+
+      .card-inner {
+        position: relative;
+        z-index: 1;
+      }
+
+      .logo-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+
+      .logo-mark {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: #020817;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 16px;
+        border: 1px solid #111827;
       }
 
-      .logo-circle img {
-        width: 40px;
-        height: 40px;
+      .logo-mark svg {
+        width: 20px;
+        height: 20px;
         display: block;
       }
 
-      h1 {
-        margin: 0 0 4px;
-        font-size: 22px;
-        letter-spacing: 0.01em;
-        color: var(--text-main);
+      .logo-text {
+        display: flex;
+        flex-direction: column;
       }
 
-      .subtitle {
-        margin: 0 0 20px;
+      .logo-text-main {
         font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        color: #f9fafb;
+      }
+
+      .logo-text-sub {
+        font-size: 11px;
         color: var(--text-muted);
       }
 
@@ -94,6 +128,19 @@
         height: 6px;
         border-radius: 50%;
         background: var(--accent);
+      }
+
+      h1 {
+        margin: 0 0 4px;
+        font-size: 22px;
+        letter-spacing: 0.01em;
+        color: var(--text-main);
+      }
+
+      .subtitle {
+        margin: 0 0 18px;
+        font-size: 14px;
+        color: var(--text-muted);
       }
 
       form {
@@ -120,15 +167,20 @@
         font-size: 14px;
         font-family: inherit;
         outline: none;
-        background: #fbf9f7;
+        background: #020617;
+        color: var(--text-main);
         transition: border-color 0.15s ease, box-shadow 0.15s ease,
           background 0.15s ease;
       }
 
+      input::placeholder {
+        color: #4b5563;
+      }
+
       input:focus {
         border-color: var(--accent);
-        box-shadow: 0 0 0 1px rgba(208, 140, 127, 0.25);
-        background: #ffffff;
+        box-shadow: 0 0 0 1px rgba(62, 207, 142, 0.35);
+        background: #020617;
       }
 
       button {
@@ -141,24 +193,24 @@
         font-weight: 600;
         cursor: pointer;
         background: var(--accent);
-        color: #ffffff;
+        color: #020617;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 6px;
         transition: transform 0.08s ease, box-shadow 0.08s ease,
           background 0.15s ease, opacity 0.15s ease;
-        box-shadow: 0 10px 24px rgba(208, 140, 127, 0.44);
+        box-shadow: 0 16px 40px rgba(62, 207, 142, 0.45);
       }
 
       button:hover {
         transform: translateY(-1px);
-        box-shadow: 0 12px 30px rgba(208, 140, 127, 0.5);
+        box-shadow: 0 20px 48px rgba(62, 207, 142, 0.5);
       }
 
       button:active {
         transform: translateY(0);
-        box-shadow: 0 6px 18px rgba(208, 140, 127, 0.35);
+        box-shadow: 0 10px 28px rgba(62, 207, 142, 0.4);
       }
 
       button:disabled {
@@ -179,21 +231,21 @@
       }
 
       .status--success {
-        color: #1a7f4b;
+        color: #22c55e;
       }
 
       .status--error {
-        color: #b3261e;
+        color: #f97373;
       }
 
       .footer {
         margin-top: 16px;
         font-size: 11px;
         color: var(--text-muted);
-      }
-
-      .footer span {
-        opacity: 0.9;
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        flex-wrap: wrap;
       }
 
       .footer a {
@@ -209,60 +261,89 @@
         .card {
           padding: 22px 18px 20px;
         }
+
+        .footer {
+          flex-direction: column;
+          align-items: flex-start;
+        }
       }
     </style>
   </head>
   <body>
     <div class="wrapper">
       <div class="card">
-        <div class="logo-circle">
-          <img
-            src="https://livelive.love/livelivelove_icon.png"
-            alt="LiveLiveLove"
-          />
-        </div>
-        <div class="pill">
-          <span class="pill-dot"></span>
-          <span>Weekly memory journal</span>
-        </div>
-        <h1>Create your account</h1>
-        <p class="subtitle">
-          Sign up to start writing a book of your memories in 52 weeks.
-        </p>
-
-        <form id="signup-form">
-          <div class="field">
-            <label for="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              required
-            />
+        <div class="card-inner">
+          <div class="logo-row">
+            <div class="logo-mark" aria-hidden="true">
+              <!-- Supabase-ish mark (simple S bolt) -->
+              <svg viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M6 3.5C6 3.224 6.224 3 6.5 3h6.4c.4 0 .62.455.38.78L11 7.5h4.5c.44 0 .67.512.37.83l-7.4 7.7c-.32.33-.87.1-.87-.36V11H6.5C6.224 11 6 10.776 6 10.5v-7Z"
+                  fill="#3ECF8E"
+                />
+              </svg>
+            </div>
+            <div class="logo-text">
+              <span class="logo-text-main">Supabase</span>
+              <span class="logo-text-sub">Auth · Custom email template demo</span>
+            </div>
           </div>
-          <div class="field">
-            <label for="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              minlength="6"
-              placeholder="At least 6 characters"
-              required
-            />
+
+          <div class="pill">
+            <span class="pill-dot"></span>
+            <span>Confirm signup flow</span>
           </div>
-          <button type="submit" id="submit-btn">
-            <span class="button-icon">✉️</span>
-            <span>Send confirmation email</span>
-          </button>
-        </form>
 
-        <p class="status" id="status"></p>
+          <h1>Sign up to trigger the email</h1>
+          <p class="subtitle">
+            This demo uses <strong>Supabase Auth</strong> to send the
+            <em>Confirm signup</em> email, customized with a branded HTML
+            template.
+          </p>
 
-        <div class="footer">
-          <span
-            >Powered by <a href="https://supabase.com" target="_blank">Supabase</a>
-            Auth – custom branded confirmation email demo.</span
-          >
+          <form id="signup-form">
+            <div class="field">
+              <label for="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="you+demo@example.com"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                minlength="6"
+                placeholder="At least 6 characters"
+                required
+              />
+            </div>
+            <button type="submit" id="submit-btn">
+              <span class="button-icon">✉️</span>
+              <span>Send confirmation email</span>
+            </button>
+          </form>
+
+          <p class="status" id="status"></p>
+
+          <div class="footer">
+            <span>Sign up with any email you control to see the template in action.</span>
+            <span
+              >Docs:
+              <a href="https://supabase.com/docs/guides/auth" target="_blank"
+                >Auth</a
+              >
+              ·
+              <a
+                href="https://supabase.com/docs/guides/auth/auth-smtp"
+                target="_blank"
+                >Email templates</a
+              ></span
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -270,9 +351,9 @@
     <script type="module">
       import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-      // TODO: replace with your own project values
-      const SUPABASE_URL = "https://YOUR_PROJECT_REF.supabase.co";
-      const SUPABASE_ANON_KEY = "YOUR_ANON_PUBLIC_KEY";
+      const SUPABASE_URL = "https://zzqezlmsysgkrtqfcikq.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp6cWV6bG1zeXNna3J0cWZjaWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0OTcyMDYsImV4cCI6MjA4MTA3MzIwNn0.DWtYBmiC0GXEJnQjoeQuT_wk9ukObl34f1JnYGHy9s8";
 
       const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -294,11 +375,11 @@
         ).value;
 
         try {
-          const { data, error } = await supabase.auth.signUp({
+          const { error } = await supabase.auth.signUp({
             email,
             password,
-            // Optional redirect after clicking the confirmation link
             options: {
+              // adjust redirect if you want, or leave as-is
               emailRedirectTo: "https://example.com/welcome",
             },
           });
@@ -309,7 +390,7 @@
             statusEl.className = "status status--error";
           } else {
             statusEl.textContent =
-              "Check your inbox for the confirmation email.";
+              "Check your inbox for the Supabase confirmation email.";
             statusEl.className = "status status--success";
             form.reset();
           }
