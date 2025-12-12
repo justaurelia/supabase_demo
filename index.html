@@ -1,407 +1,389 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Supabase Auth – Custom Email Demo</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      :root {
-        --bg: #020817;
-        --bg-soft: #020817;
-        --card-bg: #020617;
-        --accent: #3ecf8e;
-        --accent-soft: rgba(62, 207, 142, 0.12);
-        --text-main: #e5e7eb;
-        --text-muted: #9ca3af;
-        --border: #111827;
-      }
 
-      * {
-        box-sizing: border-box;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>Supabase Auth – Custom Email Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #020817;
+      --bg-soft: #020817;
+      --card-bg: #020617;
+      --accent: #3ecf8e;
+      --accent-soft: rgba(62, 207, 142, 0.12);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border: #111827;
+    }
 
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
-        background: radial-gradient(circle at top, #0b1220 0, var(--bg-soft) 55%);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--text-main);
-      }
+    * {
+      box-sizing: border-box;
+    }
 
-      .wrapper {
-        padding: 24px;
-        width: 100%;
-        max-width: 520px;
-      }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top, #0b1220 0, var(--bg-soft) 55%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+    }
 
-      .card {
-        background: var(--card-bg);
-        border-radius: 20px;
-        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
-        padding: 26px 24px 22px;
-        border: 1px solid var(--border);
-        position: relative;
-        overflow: hidden;
-      }
+    .wrapper {
+      padding: 24px;
+      width: 100%;
+      max-width: 520px;
+    }
 
-      .card::before {
-        content: "";
-        position: absolute;
-        inset: -60px;
-        background: radial-gradient(
-          circle at top right,
+    .card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
+      padding: 26px 24px 22px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -60px;
+      background: radial-gradient(circle at top right,
           rgba(62, 207, 142, 0.12),
-          transparent 55%
-        );
-        opacity: 0.9;
-        pointer-events: none;
-      }
+          transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
 
-      .card-inner {
-        position: relative;
-        z-index: 1;
-      }
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
 
-      .logo-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 14px;
-      }
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
 
-      .logo-mark {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background: #020817;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid #111827;
-      }
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #020817;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #111827;
+    }
 
-      .logo-mark svg {
-        width: 20px;
-        height: 20px;
-        display: block;
-      }
+    .logo-mark svg {
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
 
-      .logo-text {
-        display: flex;
-        flex-direction: column;
-      }
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
 
-      .logo-text-main {
-        font-size: 14px;
-        font-weight: 600;
-        letter-spacing: 0.03em;
-        text-transform: uppercase;
-        color: #f9fafb;
-      }
+    .logo-text-main {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: #f9fafb;
+    }
 
-      .logo-text-sub {
-        font-size: 11px;
-        color: var(--text-muted);
-      }
+    .logo-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
 
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        border-radius: 999px;
-        padding: 4px 10px;
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        background: var(--accent-soft);
-        color: var(--accent);
-        margin-bottom: 10px;
-      }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: var(--accent-soft);
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
 
-      .pill-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--accent);
-      }
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
 
-      h1 {
-        margin: 0 0 4px;
-        font-size: 22px;
-        letter-spacing: 0.01em;
-        color: var(--text-main);
-      }
+    h1 {
+      margin: 0 0 4px;
+      font-size: 22px;
+      letter-spacing: 0.01em;
+      color: var(--text-main);
+    }
 
-      .subtitle {
-        margin: 0 0 18px;
-        font-size: 14px;
-        color: var(--text-muted);
-      }
+    .subtitle {
+      margin: 0 0 18px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
 
-      form {
-        margin-top: 8px;
-      }
+    form {
+      margin-top: 8px;
+    }
 
-      label {
-        display: block;
-        font-size: 13px;
-        font-weight: 500;
-        margin-bottom: 4px;
-        color: var(--text-main);
-      }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: var(--text-main);
+    }
 
-      .field {
-        margin-bottom: 14px;
-      }
+    .field {
+      margin-bottom: 14px;
+    }
 
-      input {
-        width: 100%;
-        border-radius: 10px;
-        border: 1px solid var(--border);
-        padding: 9px 10px;
-        font-size: 14px;
-        font-family: inherit;
-        outline: none;
-        background: #020617;
-        color: var(--text-main);
-        transition: border-color 0.15s ease, box-shadow 0.15s ease,
-          background 0.15s ease;
-      }
+    input {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 9px 10px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      background: #020617;
+      color: var(--text-main);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease,
+        background 0.15s ease;
+    }
 
-      input::placeholder {
-        color: #4b5563;
-      }
+    input::placeholder {
+      color: #4b5563;
+    }
 
-      input:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 1px rgba(62, 207, 142, 0.35);
-        background: #020617;
-      }
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(62, 207, 142, 0.35);
+      background: #020617;
+    }
 
-      button {
-        margin-top: 6px;
-        width: 100%;
-        border: none;
-        border-radius: 999px;
-        padding: 11px 14px;
-        font-size: 15px;
-        font-weight: 600;
-        cursor: pointer;
-        background: var(--accent);
-        color: #020617;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        transition: transform 0.08s ease, box-shadow 0.08s ease,
-          background 0.15s ease, opacity 0.15s ease;
-        box-shadow: 0 16px 40px rgba(62, 207, 142, 0.45);
-      }
+    button {
+      margin-top: 6px;
+      width: 100%;
+      border: none;
+      border-radius: 999px;
+      padding: 11px 14px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--accent);
+      color: #020617;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease,
+        background 0.15s ease, opacity 0.15s ease;
+      box-shadow: 0 16px 40px rgba(62, 207, 142, 0.45);
+    }
 
-      button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 20px 48px rgba(62, 207, 142, 0.5);
-      }
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 48px rgba(62, 207, 142, 0.5);
+    }
 
-      button:active {
-        transform: translateY(0);
-        box-shadow: 0 10px 28px rgba(62, 207, 142, 0.4);
-      }
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 10px 28px rgba(62, 207, 142, 0.4);
+    }
 
-      button:disabled {
-        opacity: 0.6;
-        cursor: default;
-        box-shadow: none;
-        transform: none;
-      }
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
 
-      .button-icon {
-        font-size: 16px;
-      }
+    .button-icon {
+      font-size: 16px;
+    }
 
-      .status {
-        min-height: 18px;
-        margin-top: 10px;
-        font-size: 13px;
-      }
+    .status {
+      min-height: 18px;
+      margin-top: 10px;
+      font-size: 13px;
+    }
 
-      .status--success {
-        color: #22c55e;
-      }
+    .status--success {
+      color: #22c55e;
+    }
 
-      .status--error {
-        color: #f97373;
+    .status--error {
+      color: #f97373;
+    }
+
+    .footer {
+      margin-top: 16px;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 22px 18px 20px;
       }
 
       .footer {
-        margin-top: 16px;
-        font-size: 11px;
-        color: var(--text-muted);
-        display: flex;
-        justify-content: space-between;
-        gap: 8px;
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: flex-start;
       }
+    }
+  </style>
+</head>
 
-      .footer a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-
-      .footer a:hover {
-        text-decoration: underline;
-      }
-
-      @media (max-width: 480px) {
-        .card {
-          padding: 22px 18px 20px;
-        }
-
-        .footer {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="wrapper">
-      <div class="card">
-        <div class="card-inner">
-          <div class="logo-row">
-            <div class="logo-mark" aria-hidden="true">
-              <!-- Supabase-ish mark (simple S bolt) -->
-              <svg viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M6 3.5C6 3.224 6.224 3 6.5 3h6.4c.4 0 .62.455.38.78L11 7.5h4.5c.44 0 .67.512.37.83l-7.4 7.7c-.32.33-.87.1-.87-.36V11H6.5C6.224 11 6 10.776 6 10.5v-7Z"
-                  fill="#3ECF8E"
-                />
-              </svg>
-            </div>
-            <div class="logo-text">
-              <span class="logo-text-main">Supabase</span>
-              <span class="logo-text-sub">Auth · Custom email template demo</span>
-            </div>
+<body>
+  <div class="wrapper">
+    <div class="card">
+      <div class="card-inner">
+        <div class="logo-row">
+          <div class="logo-mark" aria-hidden="true">
+            <!-- Supabase-ish mark (simple S bolt) -->
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M6 3.5C6 3.224 6.224 3 6.5 3h6.4c.4 0 .62.455.38.78L11 7.5h4.5c.44 0 .67.512.37.83l-7.4 7.7c-.32.33-.87.1-.87-.36V11H6.5C6.224 11 6 10.776 6 10.5v-7Z"
+                fill="#3ECF8E" />
+            </svg>
           </div>
-
-          <div class="pill">
-            <span class="pill-dot"></span>
-            <span>Confirm signup flow</span>
+          <div class="logo-text">
+            <span class="logo-text-main">Supabase</span>
+            <span class="logo-text-sub">Auth · Custom email template demo</span>
           </div>
+        </div>
 
-          <h1>Sign up to trigger the email</h1>
-          <p class="subtitle">
-            This demo uses <strong>Supabase Auth</strong> to send the
-            <em>Confirm signup</em> email, customized with a branded HTML
-            template.
-          </p>
+        <div class="pill">
+          <span class="pill-dot"></span>
+          <span>Confirm signup flow</span>
+        </div>
 
-          <form id="signup-form">
-            <div class="field">
-              <label for="email">Email</label>
-              <input
-                id="email"
-                type="email"
-                placeholder="you+demo@example.com"
-                required
-              />
-            </div>
-            <div class="field">
-              <label for="password">Password</label>
-              <input
-                id="password"
-                type="password"
-                minlength="6"
-                placeholder="At least 6 characters"
-                required
-              />
-            </div>
-            <button type="submit" id="submit-btn">
-              <span class="button-icon">✉️</span>
-              <span>Send confirmation email</span>
-            </button>
-          </form>
+        <h1>Sign up to trigger the email</h1>
+        <p class="subtitle">
+          This demo uses <strong>Supabase Auth</strong> to send the
+          <em>Confirm signup</em> email, customized with a branded HTML
+          template.
+        </p>
 
-          <p class="status" id="status"></p>
-
-          <div class="footer">
-            <span>Sign up with any email you control to see the template in action.</span>
-            <span
-              >Docs:
-              <a href="https://supabase.com/docs/guides/auth" target="_blank"
-                >Auth</a
-              >
-              ·
-              <a
-                href="https://supabase.com/docs/guides/auth/auth-smtp"
-                target="_blank"
-                >Email templates</a
-              ></span
-            >
+        <form id="signup-form">
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+              required />
           </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" type="password" minlength="6" placeholder="At least 6 characters" required />
+          </div>
+          <button type="submit" id="submit-btn">
+            <span class="button-icon">✉️</span>
+            <span>Send confirmation email</span>
+          </button>
+        </form>
+
+        <p class="status" id="status"></p>
+
+        <div class="footer">
+          <span>Sign up with any email you control to see the template in action.</span>
+          <span>Docs:
+            <a href="https://supabase.com/docs/guides/auth" target="_blank">Auth</a>
+            ·
+            <a href="https://supabase.com/docs/guides/auth/auth-smtp" target="_blank">Email templates</a></span>
         </div>
       </div>
     </div>
+  </div>
 
-    <script type="module">
-      import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-      const SUPABASE_URL = "https://zzqezlmsysgkrtqfcikq.supabase.co";
-      const SUPABASE_ANON_KEY =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp6cWV6bG1zeXNna3J0cWZjaWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0OTcyMDYsImV4cCI6MjA4MTA3MzIwNn0.DWtYBmiC0GXEJnQjoeQuT_wk9ukObl34f1JnYGHy9s8";
+    const SUPABASE_URL = "https://zzqezlmsysgkrtqfcikq.supabase.co";
+    const SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp6cWV6bG1zeXNna3J0cWZjaWtxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0OTcyMDYsImV4cCI6MjA4MTA3MzIwNn0.DWtYBmiC0GXEJnQjoeQuT_wk9ukObl34f1JnYGHy9s8";
 
-      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      const form = document.getElementById("signup-form");
-      const statusEl = document.getElementById("status");
-      const btn = document.getElementById("submit-btn");
+    const form = document.getElementById("signup-form");
+    const statusEl = document.getElementById("status");
+    const btn = document.getElementById("submit-btn");
 
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        statusEl.textContent = "";
-        statusEl.className = "status";
-        btn.disabled = true;
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statusEl.textContent = "";
+      statusEl.className = "status";
+      btn.disabled = true;
 
-        const email = /** @type {HTMLInputElement} */ (
-          document.getElementById("email")
-        ).value;
-        const password = /** @type {HTMLInputElement} */ (
-          document.getElementById("password")
-        ).value;
+      const email = /** @type {HTMLInputElement} */ (
+        document.getElementById("email")
+      ).value;
+      const password = /** @type {HTMLInputElement} */ (
+        document.getElementById("password")
+      ).value;
 
-        try {
-          const { error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-              // adjust redirect if you want, or leave as-is
-              emailRedirectTo: "https://example.com/welcome",
-            },
-          });
+      try {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            // adjust redirect if you want, or leave as-is
+            emailRedirectTo: "https://example.com/welcome",
+          },
+        });
 
-          if (error) {
-            console.error(error);
-            statusEl.textContent = error.message;
-            statusEl.className = "status status--error";
-          } else {
-            statusEl.textContent =
-              "Check your inbox for the Supabase confirmation email.";
-            statusEl.className = "status status--success";
-            form.reset();
-          }
-        } catch (err) {
-          console.error(err);
-          statusEl.textContent = "Unexpected error. Please try again.";
+        if (error) {
+          console.error(error);
+          statusEl.textContent = error.message;
           statusEl.className = "status status--error";
-        } finally {
-          btn.disabled = false;
+        } else {
+          statusEl.textContent =
+            "Check your inbox for the Supabase confirmation email.";
+          statusEl.className = "status status--success";
+          form.reset();
         }
-      });
-    </script>
-  </body>
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = "Unexpected error. Please try again.";
+        statusEl.className = "status status--error";
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+
 </html>
